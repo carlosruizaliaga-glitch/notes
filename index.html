@@ -51,7 +51,7 @@ button { font-family: 'JetBrains Mono', monospace; cursor: pointer; }
 #auth-err { font-size: 11px; color: var(--red); min-height: 16px; }
 #auth-ok { font-size: 11px; color: var(--green); min-height: 16px; }
 
-#topbar { display: flex; align-items: center; gap: 14px; padding: 10px 20px; border-bottom: 2px solid var(--text); background: var(--bg); flex-shrink: 0; }
+#topbar { display: flex; align-items: center; gap: 14px; padding: 10px 20px; border-bottom: 3px solid var(--text); background: var(--bg); flex-shrink: 0; }
 #logo { font-size: 14px; font-weight: 700; }
 #logo .c1 { color: var(--dim); } #logo .c2 { color: var(--purple); } #logo .c3 { color: var(--cyan); } #logo .c4 { color: var(--green); }
 #topbar-gap { flex: 1; }
@@ -75,8 +75,8 @@ button { font-family: 'JetBrains Mono', monospace; cursor: pointer; }
 .fld-x { display: none; background: none; border: none; color: var(--dim); font-size: 14px; padding: 0; line-height: 1; transition: color 0.1s; }
 .fld:hover .fld-x { display: block; }
 .fld-x:hover { color: var(--red); }
-#sidebar-foot { border-top: 1px solid var(--line); padding: 10px 12px; }
-#btn-folder { background: none; border: none; font-size: 11px; font-weight: 700; color: var(--green); letter-spacing: 0.06em; padding: 4px; width: 100%; text-align: left; transition: opacity 0.1s; }
+#sidebar-foot { border-top: 3px solid var(--text); padding: 10px 12px; }
+#btn-folder { background: none; border: none; font-size: 11px; font-weight: 700; color: var(--text); letter-spacing: 0.06em; padding: 8px 0; width: 100%; text-align: left; transition: opacity 0.1s; border-bottom: 1px solid var(--text); cursor: pointer; }
 #btn-folder:hover { opacity: 0.7; }
 #folder-form { display: none; gap: 4px; align-items: center; }
 #folder-form.on { display: flex; }
@@ -87,7 +87,7 @@ button { font-family: 'JetBrains Mono', monospace; cursor: pointer; }
 #notes-head { display: flex; align-items: center; gap: 10px; padding: 10px 18px; border-bottom: 1px solid var(--line); background: var(--bg2); flex-shrink: 0; }
 #folder-lbl { font-size: 13px; font-weight: 700; color: var(--cyan); flex: 1; }
 #notes-ct { font-size: 11px; color: var(--dim); }
-#btn-new { background: var(--green); border: none; border-radius: 5px; font-size: 12px; font-weight: 700; color: #0d1117; padding: 5px 14px; letter-spacing: 0.04em; transition: opacity 0.15s; }
+#btn-new { background: var(--text); border: none; border-radius: 0; font-size: 12px; font-weight: 700; color: var(--bg); padding: 5px 14px; letter-spacing: 0.04em; transition: opacity 0.15s; }
 #btn-new:hover { opacity: 0.8; }
 
 #grid { flex: 1; overflow-y: auto; display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 12px; padding: 18px; align-content: start; background: var(--bg); }
@@ -111,8 +111,16 @@ button { font-family: 'JetBrains Mono', monospace; cursor: pointer; }
 .card-pre { font-size: 11.5px; color: var(--dim); line-height: 1.7; flex: 1; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; white-space: pre-wrap; }
 .card-foot { font-size: 10px; color: var(--dim); display: flex; justify-content: space-between; align-items: center; gap: 6px; flex-wrap: wrap; }
 .card-badges { display: flex; gap: 4px; }
-.card-tag { border: 1px solid var(--purple); padding: 1px 5px; font-size: 9px; letter-spacing: 0.06em; color: var(--purple); border-radius: 3px; font-weight: 700; }
-.card-tag.txt-tag { border-color: var(--cyan); color: var(--cyan); }
+.card-tag { border: 1px solid var(--text); padding: 1px 5px; font-size: 9px; letter-spacing: 0.06em; color: var(--text); border-radius: 0; font-weight: 700; }
+.card-tag.txt-tag { border: 1px solid var(--text); color: var(--text); }
+
+/* Color tags based on note color */
+.card[data-c="green"] .card-tag { border: 1px solid #000; color: #000; }
+.card[data-c="cyan"] .card-tag { border: 1px solid #000; color: #000; }
+.card[data-c="purple"] .card-tag { border: 1px solid #000; color: #000; }
+.card[data-c="orange"] .card-tag { border: 1px solid #000; color: #000; }
+.card[data-c="red"] .card-tag { border: 1px solid #000; color: #000; }
+.card[data-c="yellow"] .card-tag { border: 1px solid #000; color: #000; }
 #grid-empty { grid-column: 1/-1; display: flex; align-items: center; justify-content: center; min-height: 160px; font-size: 12px; color: var(--dim); font-style: italic; }
 
 #editor { position: fixed; inset: 0; background: var(--bg); display: none; flex-direction: column; z-index: 200; }
@@ -322,9 +330,10 @@ function initAuth() {
   authEmail.addEventListener('keydown', e => { if (e.key==='Enter') authPass.focus(); });
   authPass.addEventListener('keydown',  e => { if (e.key==='Enter') authBtn.click(); });
 
-  document.getElementById('btn-logout').addEventListener('click', async () => {
-    await sb.auth.signOut();
-  });
+document.getElementById('btn-logout').addEventListener('click', async () => {
+  await sb.auth.signOut();
+  authScreen.style.display = 'flex';
+});
 
   sb.auth.onAuthStateChange(async (event, session) => {
     if (session) {
